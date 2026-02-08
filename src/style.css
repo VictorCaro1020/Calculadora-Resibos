@@ -1146,7 +1146,6 @@ body {
 .detail-row.total strong {
   color: #ffff00;
 }
-}
 
 .detail-table td:last-child {
   text-align: right;
@@ -1167,13 +1166,16 @@ body {
 
 /* Responsive: en pantallas pequeñas, reduce el tamaño de las tarjetas */
 @media (max-width: 768px) {
-  .manual-mode-container,
-  .calculation-details-container {
+  .manual-mode-wrapper,
+  .details-accordion {
+    width: 100%;
+  }
+
+  .manual-controls {
     grid-template-columns: 1fr;
   }
 
-  .manual-card,
-  .detail-card {
+  .accordion-content {
     padding: var(--space-md);
   }
 }

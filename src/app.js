@@ -621,13 +621,44 @@ class UtilityCalculatorApp {
     });
 
     // Calcula y renderiza resultados
-    const { results } = Calculator.calculateAllocations(this.data);
+    let { results } = Calculator.calculateAllocations(this.data);
+
+    // Aplica overrides manuales si el modo manual está activado
+    if (this.data.manualModeActive && this.data.manualOverrides) {
+      Object.entries(this.data.manualOverrides).forEach(([key, value]) => {
+        const [unitId, field] = key.split('.');
+        if (results[unitId]) {
+          results[unitId][field] = value;
+        }
+      });
+    }
+
     UI.renderResults(results, this.data.extras);
 
     // Renderiza modo manual (para editar valores)
     UI.renderManualMode(results, (unitId, field, value) => {
       // Callback para cuando el usuario edita manualmente un valor
-      console.log(`Modo Manual: ${unitId}.${field} = ${value}`);
+      
+      if (unitId === '__toggle__' && field === '__manual_mode__') {
+        // Toggle del modo manual (Activo/Inactivo)
+        this.data.manualModeActive = value === 1;
+        console.log(`Modo Manual ${this.data.manualModeActive ? 'ACTIVADO' : 'DESACTIVADO'}`);
+        this.save();
+        this.refresh();
+        return;
+      }
+
+      // Establecer override para un valor específico
+      const key = `${unitId}.${field}`;
+      if (!this.data.manualOverrides) {
+        this.data.manualOverrides = {};
+      }
+
+      this.data.manualOverrides[key] = value;
+      console.log(`Modo Manual: ${key} = ${value}`);
+      
+      this.save();
+      this.refresh();
     });
 
     // Renderiza detalles de cálculos

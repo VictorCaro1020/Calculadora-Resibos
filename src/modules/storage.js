@@ -75,7 +75,11 @@ const Storage = (() => {
     },
     
     // Cargos adicionales (deuda, parqueadero, etc.) asignados a unidades específicas
-    extras: []
+    extras: [],
+
+    // Modo Manual - ediciones personalizadas de valores
+    manualOverrides: {},  // { "unitId.field": value }
+    manualModeActive: false  // Si el modo manual está activado
   };
 
   /**
