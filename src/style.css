@@ -22,9 +22,11 @@
 
 :root {
   /* Colores */
-  --color-primary: #1e3a8a;           /* Azul principal - menos brillante */
-  --color-primary-dark: #172554;      /* Azul oscuro (hover) - más apagado */
-  --color-primary-light: #e6eefc;     /* Azul muy claro (fondo) - más neutro */
+  --color-primary: #223a5a;           /* Azul principal más oscuro y menos brillante */
+  --color-primary-dark: #162536;      /* Azul oscuro (hover) más apagado */
+  --color-primary-light: #e9f1f8;     /* Azul muy claro (fondo) más neutro */
+  --color-primary-soft: #8faece;      /* Azul suave para bordes y sombras */
+  --color-primary-muted: #6b86a6;     /* Azul atenuado para elementos secundarios */
   
   --color-secondary: #6b7280;         /* Gris para textos secundarios */
   --color-success: #10b981;           /* Verde para acciones positivas */
@@ -1195,9 +1197,9 @@ body {
 .collapse-header {
   width: 100%;
   padding: var(--space-md) var(--space-lg);
-  background: #a8d5ff;
+  background: var(--color-primary-light);
   color: #1e40af;
-  border: 2px solid #7cb3f7;
+  border: 2px solid var(--color-primary-soft);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -1210,16 +1212,16 @@ body {
 }
 
 .collapse-header:hover {
-  background: #7cb3f7;
+  background: var(--color-primary-soft);
   color: white;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
 .collapse-header.active {
-  background: #3b82f6;
+  background: var(--color-primary);
   color: white;
-  border-color: #2563eb;
+  border-color: var(--color-primary-dark);
 }
 
 .collapse-header h2 {
@@ -1313,7 +1315,7 @@ body {
 
 .manual-mode-wrapper {
   background: var(--color-bg);
-  border: 2px solid #a8d5ff;
+  border: 2px solid var(--color-primary-light);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
@@ -1333,7 +1335,7 @@ body {
 
 .manual-toggle-section {
   background: rgba(168, 213, 255, 0.3);
-  border: 2px solid #a8d5ff;
+  border: 2px solid var(--color-primary-light);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   margin-bottom: var(--space-lg);
@@ -1358,7 +1360,7 @@ body {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: #7cb3f7;
+  accent-color: var(--color-primary-soft);
 }
 
 .toggle-status {
