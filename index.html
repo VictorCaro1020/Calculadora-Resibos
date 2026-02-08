@@ -1,36 +1,558 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Recibos</title>
-    <link rel="manifest" href="/Calculadora-Resibos/src/manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232b6cb0' width='192' height='192'/><text x='50%' y='50%' font-size='120' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>$</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232b6cb0' width='192' height='192'/><text x='50%' y='50%' font-size='120' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>$</text></svg>">
-    <meta name="theme-color" content="#2b6cb0">
-    <link rel="stylesheet" href="/Calculadora-Resibos/src/style.css">
-    <meta name="description" content="Calculadora inteligente para distribuir equitativamente gastos de servicios domésticos entre múltiples unidades">
+  <!-- Meta tags para configuración básica -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculadora de recibos de servicios domésticos (luz, agua, gas). Distribuye gastos equitativamente entre unidades.">
+  <meta name="theme-color" content="#2b6cb0">
+  
+  <!-- PWA - Manifest para instalación como app -->
+  <link rel="manifest" href="/Calculadora-Resibos/src/manifest.json">
+  
+  <!-- PWA - Apple Touch Icon (iOS) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%232b6cb0' width='180' height='180'/><text x='90' y='90' font-size='100' fill='white' text-anchor='middle' dominant-baseline='middle' font-weight='bold' font-family='Arial'>R</text></svg>">
+  
+  <title>Calculadora de Recibos - Luz, Agua y Gas</title>
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/Calculadora-Resibos/src/style.css">
 </head>
+
 <body>
-    <div id="app"></div>
+  <!-- Skip to main content para accesibilidad -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="header-title">
+        <h1>Calculadora de Recibos</h1>
+        <p class="subtitle">Distribuye gastos domésticos de forma equitativa</p>
+      </div>
+      <div class="header-controls">
+        <button 
+          id="theme-toggle" 
+          class="btn btn-small theme-toggle"
+          aria-label="Cambiar tema"
+          title="Cambiar entre tema claro y oscuro"
+        >
+          🌙
+        </button>
+        <label for="language-select" class="sr-only">Selecciona idioma</label>
+        <select id="language-select" class="language-selector" aria-label="Selecciona idioma">
+          <option value="es">Español</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="app-main">
+
+    <!-- Sección introducción -->
+    <section class="intro-section">
+      <div class="intro-content">
+        <p class="intro-text">
+          Esta aplicación calcula de forma automática y equitativa cuánto debe pagar cada unidad por 
+          luz, agua y gas. Los datos se guardan localmente en tu navegador para que no tengas que 
+          escribirlos cada vez que accedas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sección 1: Gestión de unidades -->
+    <section class="panel" id="units-section">
+      <h2>Unidades y Habitantes</h2>
+      <p class="section-description">
+        Agrega o edita cada unidad. Especifica cuántas personas viven en cada una y el arriendo mensual.
+      </p>
+
+      <div class="units-container">
+        <div id="units-list" class="units-list" role="list"></div>
+
+        <div class="add-unit-form">
+          <label for="new-unit-name" class="form-label">Nombre</label>
+          <input 
+            id="new-unit-name" 
+            type="text"
+            placeholder="ej. 101"
+            aria-label="Nombre de la unidad"
+            class="form-input"
+          />
+
+          <label for="new-unit-people" class="form-label">Personas</label>
+          <input 
+            id="new-unit-people" 
+            type="number"
+            min="0"
+            value="1"
+            aria-label="Cantidad de personas"
+            class="form-input"
+          />
+
+          <label for="new-unit-rent" class="form-label">Arriendo</label>
+          <input 
+            id="new-unit-rent" 
+            type="number"
+            min="0"
+            value="0"
+            placeholder="Monto"
+            aria-label="Arriendo mensual"
+            class="form-input"
+          />
+
+          <button id="add-unit-btn" class="btn btn-primary" aria-label="Agregar nueva unidad">
+            + Agregar Unidad
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 2: Electricidad A (201 / 202) -->
+    <section class="panel" id="electricity-a-section">
+      <h2>Electricidad A (201 / 202)</h2>
+      <p class="section-description">
+        Ingresa el total del recibo y las lecturas individuales del medidor 202. 
+        El consumo de 201 se calcula automáticamente.
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="ea-total-kwh" class="form-label">Total kWh</label>
+          <input 
+            id="ea-total-kwh" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Total de kilovatios-hora del recibo A"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="ea-total-price" class="form-label">Precio total</label>
+          <input 
+            id="ea-total-price" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Precio total del recibo A"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="ea-prev-202" class="form-label">Lectura anterior 202</label>
+          <input 
+            id="ea-prev-202" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Lectura anterior del medidor 202"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="ea-curr-202" class="form-label">Lectura actual 202</label>
+          <input 
+            id="ea-curr-202" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Lectura actual del medidor 202"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="ea-cleaning" class="form-label">Aseo</label>
+          <input 
+            id="ea-cleaning" 
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="Monto aseo"
+            aria-label="Cargo de aseo recibo A"
+            class="form-input"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 3: Electricidad B (401, 500 y 402) -->
+    <section class="panel" id="electricity-b-section">
+      <h2>Electricidad B (401, 500 y 402)</h2>
+      <p class="section-description">
+        Ingresa el total del recibo y las lecturas de los medidores 401 y 500. 
+        El consumo de 402 se calcula automáticamente.
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="eb-total-kwh" class="form-label">Total kWh</label>
+          <input 
+            id="eb-total-kwh" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Total de kilovatios-hora del recibo B"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="eb-total-price" class="form-label">Precio total</label>
+          <input 
+            id="eb-total-price" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Precio total del recibo B"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="eb-prev-401" class="form-label">Lectura anterior 401</label>
+          <input 
+            id="eb-prev-401" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Lectura anterior del medidor 401"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="eb-curr-401" class="form-label">Lectura actual 401</label>
+          <input 
+            id="eb-curr-401" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Lectura actual del medidor 401"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="eb-prev-500" class="form-label">Lectura anterior 500</label>
+          <input 
+            id="eb-prev-500" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Lectura anterior del medidor 500"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="eb-curr-500" class="form-label">Lectura actual 500</label>
+          <input 
+            id="eb-curr-500" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Lectura actual del medidor 500"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="eb-cleaning" class="form-label">Aseo</label>
+          <input 
+            id="eb-cleaning" 
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="Monto aseo"
+            aria-label="Cargo de aseo recibo B"
+            class="form-input"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 4: Agua -->
+    <section class="panel" id="water-section">
+      <h2>Agua</h2>
+      <p class="section-description">
+        Ingresa el total del recibo. Se distribuye automáticamente según la cantidad de personas en cada unidad.
+      </p>
+
+      <div class="form-group">
+        <label for="water-total-price" class="form-label">Total factura agua</label>
+        <input 
+          id="water-total-price" 
+          type="number"
+          min="0"
+          step="0.01"
+          aria-label="Total factura de agua"
+          class="form-input"
+        />
+      </div>
+    </section>
+
+    <!-- Sección 5: Gas -->
+    <section class="panel" id="gas-section">
+      <h2>Gas</h2>
+      <p class="section-description">
+        Dos recibos independientes: uno para (201+202) y otro para (401+402). 
+        Se distribuye según la cantidad de personas en cada grupo.
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="gas-group1" class="form-label">Total factura gas (201+202)</label>
+          <input 
+            id="gas-group1" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Total factura gas grupo 1"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gas-group2" class="form-label">Total factura gas (401+402)</label>
+          <input 
+            id="gas-group2" 
+            type="number"
+            min="0"
+            step="0.01"
+            aria-label="Total factura gas grupo 2"
+            class="form-input"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 6: Cargos adicionales -->
+    <section class="panel" id="extras-section">
+      <h2>Cargos Adicionales</h2>
+      <p class="section-description">
+        Agrega deudas, parqueaderos, o cualquier otro cargo. Cada uno se asigna a una unidad específica.
+      </p>
+
+      <div id="extras-list" class="extras-list" role="list"></div>
+
+      <div class="add-extra-form">
+        <label for="extra-name" class="form-label">Nombre del cargo</label>
+        <input 
+          id="extra-name" 
+          type="text"
+          placeholder="ej. Parqueadero"
+          aria-label="Nombre del cargo adicional"
+          class="form-input"
+        />
+
+        <label for="extra-amount" class="form-label">Monto</label>
+        <input 
+          id="extra-amount" 
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="Monto"
+          aria-label="Monto del cargo"
+          class="form-input"
+        />
+
+        <label for="extra-unit-select" class="form-label">Asignar a</label>
+        <select 
+          id="extra-unit-select" 
+          aria-label="Unidad a la que asignar el cargo"
+          class="form-input"
+        ></select>
+
+        <button id="add-extra-btn" class="btn btn-primary" aria-label="Agregar cargo adicional">
+          + Agregar Cargo
+        </button>
+      </div>
+    </section>
+
+    <!-- Sección 7: Resultados -->
+    <section class="panel" id="results-section">
+      <h2>Distribución de Gastos</h2>
+      <p class="section-description">
+        Tabla con el desglose completo de gastos por unidad.
+      </p>
+      <div id="results" class="results-container" role="region" aria-live="polite"></div>
+    </section>
+
+    <!-- Sección 8: Resumen y Recibos -->
+    <section class="panel" id="summary-section">
+      <h2>Resumen por Unidad</h2>
+
+      <div class="summary-controls">
+        <div class="control-group">
+          <label for="unit-summary-select" class="form-label">Seleccionar unidad</label>
+          <select id="unit-summary-select" class="form-input" aria-label="Selecciona unidad para ver detalle"></select>
+        </div>
+
+        <div class="control-group">
+          <label for="summary-month-select" class="form-label">Mes facturado</label>
+          <select id="summary-month-select" class="form-input" aria-label="Mes del recibo"></select>
+        </div>
+
+        <fieldset class="control-group checkboxes">
+          <legend class="form-label">Componentes a incluir</legend>
+          <label class="checkbox-label">
+            <input type="checkbox" id="include-rent" checked aria-label="Incluir arriendo">
+            Arriendo
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="include-electricity" checked aria-label="Incluir electricidad">
+            Electricidad
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="include-water" checked aria-label="Incluir agua">
+            Agua
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="include-gas" checked aria-label="Incluir gas">
+            Gas
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="include-cleaning" checked aria-label="Incluir aseo">
+            Aseo
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="include-extras" checked aria-label="Incluir cargos adicionales">
+            Cargos Adicionales
+          </label>
+        </fieldset>
+
+        <button id="generate-receipt-img" class="btn btn-secondary" aria-label="Generar recibo como imagen PNG">
+          Descargar Recibo (PNG)
+        </button>
+      </div>
+
+      <div id="unit-summary-card" class="summary-card" role="region" aria-live="polite"></div>
+    </section>
+
+    <!-- Sección 9: Modo Manual -->
+    <section class="panel" id="manual-section">
+      <h2>🔧 Modo Manual - Editar Valores</h2>
+      <p class="section-description">
+        Si algún cálculo no coincide con tu recibo, edita directamente los valores aquí.
+      </p>
+      <div id="manual-mode-container" class="manual-mode-container" role="region" aria-live="polite"></div>
+    </section>
+
+    <!-- Sección 10: Detalles de Cálculos -->
+    <section class="panel" id="details-section">
+      <h2>📊 Detalles de Cálculos</h2>
+      <p class="section-description">
+        Visualiza cómo se distribuyeron los gastos: kWh por unidad, precio por persona, etc.
+      </p>
+      <div id="calculation-details-container" class="calculation-details-container" role="region" aria-live="polite"></div>
+    </section>
+
+    <!-- Sección 11: Acciones globales -->
+    <section class="panel" id="actions-section">
+      <h2>Gestión de Datos</h2>
+      <p class="section-description">
+        Exporta e importa tus datos en formato JSON, o borra todo y empieza de nuevo.
+      </p>
+
+      <div class="actions-buttons">
+        <button id="export-btn" class="btn btn-secondary" aria-label="Exportar datos como archivo JSON">
+          Exportar Datos (JSON)
+        </button>
+
+        <button id="import-btn" class="btn btn-secondary" aria-label="Importar datos desde archivo JSON">
+          Importar Datos (JSON)
+        </button>
+
+        <button id="reset-btn" class="btn btn-danger" aria-label="Borrar todos los datos guardados">
+          Borrar Todos los Datos
+        </button>
+
+        <!-- Input hidden para importar archivos -->
+        <input 
+          id="import-file" 
+          type="file" 
+          accept="application/json" 
+          style="display:none"
+          aria-label="Selecciona archivo JSON para importar"
+        />
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p class="footer-text">
+      Los datos se guardan localmente en tu navegador. Si quieres compartir o usar en otro dispositivo, 
+      exporta el JSON e impórtalo allá.
+    </p>
+    <p class="footer-credit">
+      Calculadora de Recibos • Construida con HTML, CSS y JavaScript
+    </p>
+  </footer>
+
+  <!-- Scripts externos (en orden de dependencia) -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <!-- Scripts modulares de la aplicación (en orden de dependencia) -->
+  <script src="/Calculadora-Resibos/src/modules/i18n.js"></script>
+  <script src="/Calculadora-Resibos/src/modules/storage.js"></script>
+  <script src="/Calculadora-Resibos/src/modules/calculator.js"></script>
+  <script src="/Calculadora-Resibos/src/modules/ui.js"></script>
+
+  <!-- Script principal que orquesta todo -->
+  <script src="/Calculadora-Resibos/src/app.js"></script>
+
+  <!-- PWA - Registro de Service Worker para funcionalidad offline -->
+  <script>
+    /**
+     * REGISTRAR SERVICE WORKER
+     * 
+     * QUÉ HACE:
+     * 1. Verifica que el navegador soporta Service Workers
+     * 2. Registra 'service-worker.js'
+     * 3. Si hay nuevo SW disponible, notifica al usuario
+     * 
+     * RESULTADO:
+     * - App funciona offline
+     * - Datos se cachean automáticamente
+     * - Actualizaciones se descargan en background
+     */
     
-    <!-- Modular app loaded from src/ -->
-    <script src="/Calculadora-Resibos/src/modules/i18n.js"></script>
-    <script src="/Calculadora-Resibos/src/modules/storage.js"></script>
-    <script src="/Calculadora-Resibos/src/modules/calculator.js"></script>
-    <script src="/Calculadora-Resibos/src/modules/ui.js"></script>
-    <script src="/Calculadora-Resibos/src/app.js"></script>
-    
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/Calculadora-Resibos/src/service-worker.js', { scope: '/Calculadora-Resibos/' })
-                .then(() => console.log('✓ Service Worker registrado'))
-                .catch(err => console.warn('✗ Error registrando Service Worker:', err));
-        }
-        
-        // Initialize the app
-        const app = UtilityCalculatorApp();
-        app.initialize();
-    </script>
+    if ('serviceWorker' in navigator) {
+      // Esperar a que el DOM esté listo
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/Calculadora-Resibos/src/service-worker.js', {
+          scope: '/Calculadora-Resibos/'
+        })
+          .then((registration) => {
+            console.log('✅ PWA: Service Worker registrado exitosamente');
+            console.log('📍 Scope:', registration.scope);
+            
+            // Escuchar por nuevas versiones del Service Worker
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              console.log('🔄 Nueva versión disponible, descargando...');
+              
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'activated') {
+                  console.log('✅ Nueva versión lista. Recarga para actualizar.');
+                  // Opcional: notificar al usuario que hay actualización
+                }
+              });
+            });
+          })
+          .catch((error) => {
+            console.error('❌ Error registrando Service Worker:', error);
+          });
+      });
+    } else {
+      console.warn('⚠️ Service Worker no soportado en este navegador');
+    }
+  </script>
 </body>
 </html>
