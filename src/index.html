@@ -435,21 +435,31 @@
     </section>
 
     <!-- Sección 9: Modo Manual -->
-    <section class="panel" id="manual-section">
-      <h2>🔧 Modo Manual - Editar Valores</h2>
-      <p class="section-description">
-        Si algún cálculo no coincide con tu recibo, edita directamente los valores aquí.
-      </p>
-      <div id="manual-mode-container" class="manual-mode-container" role="region" aria-live="polite"></div>
+    <section class="panel collapsible-section" id="manual-section">
+      <button class="collapse-header" data-toggle="manual-content">
+        <h2>🔧 Modo Manual - Editar Valores</h2>
+        <span class="collapse-icon">▼</span>
+      </button>
+      <div id="manual-content" class="collapse-content" style="display: none;">
+        <p class="section-description">
+          Si algún cálculo no coincide con tu recibo, edita directamente los valores aquí.
+        </p>
+        <div id="manual-mode-container" class="manual-mode-container" role="region" aria-live="polite"></div>
+      </div>
     </section>
 
     <!-- Sección 10: Detalles de Cálculos -->
-    <section class="panel" id="details-section">
-      <h2>📊 Detalles de Cálculos</h2>
-      <p class="section-description">
-        Visualiza cómo se distribuyeron los gastos: kWh por unidad, precio por persona, etc.
-      </p>
-      <div id="calculation-details-container" class="calculation-details-container" role="region" aria-live="polite"></div>
+    <section class="panel collapsible-section" id="details-section">
+      <button class="collapse-header" data-toggle="details-content">
+        <h2>📊 Detalles de Cálculos</h2>
+        <span class="collapse-icon">▼</span>
+      </button>
+      <div id="details-content" class="collapse-content" style="display: none;">
+        <p class="section-description">
+          Visualiza cómo se distribuyeron los gastos: kWh por unidad, precio por persona, etc.
+        </p>
+        <div id="calculation-details-container" class="calculation-details-container" role="region" aria-live="polite"></div>
+      </div>
     </section>
 
     <!-- Sección 11: Acciones globales -->
