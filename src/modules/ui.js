@@ -697,7 +697,7 @@ const UI = (() => {
    * @param {object} results - Resultados actuales {unitId: {rent, electricity, ...}}
    * @param {function} onUpdate - Callback cuando se actualiza un valor
    */
-  const renderManualMode = (results, onUpdate) => {
+  const renderManualMode = (results, manualOverrides, manualModeActive, onUpdate) => {
     const container = getElement('manual-mode-container');
     if (!container) return;
 
@@ -717,7 +717,7 @@ const UI = (() => {
     };
 
     let html = `
-      <div class="manual-mode-wrapper">
+      <div class="manual-mode-wrapper ${manualModeActive ? 'manual-mode-active' : ''}">
         <div class="manual-controls">
           <div class="control-group">
             <label for="manual-unit-select" class="form-label">Seleccionar Unidad</label>
@@ -756,12 +756,12 @@ const UI = (() => {
           <div class="manual-toggle-wrapper">
             <label class="toggle-label">
               Modo Manual:
-              <input type="checkbox" id="manual-mode-toggle" class="manual-toggle-input" />
-              <span class="toggle-status active">ACTIVO</span>
-              <span class="toggle-status inactive">INACTIVO</span>
+              <input type="checkbox" id="manual-mode-toggle" class="manual-toggle-input" ${manualModeActive ? 'checked' : ''} />
+              <span class="toggle-status active">🔴 ACTIVO</span>
+              <span class="toggle-status inactive">⚪ INACTIVO</span>
             </label>
           </div>
-          <p class="text-info">✓ Activo = aplica solo cambios editados | ✗ Inactivo = vuelve a automático</p>
+          <p class="text-info">✓ Activo = aplica solo cambios editados (resaltados) | ✗ Inactivo = vuelve a automático</p>
         </div>
 
         <div id="manual-changes-list" class="manual-changes-list"></div>
@@ -769,6 +769,26 @@ const UI = (() => {
     `;
 
     container.innerHTML = html;
+
+    // Renderizar lista de cambios realizados
+    const changesList = getElement('manual-changes-list');
+    if (manualOverrides && Object.keys(manualOverrides).length > 0) {
+      let changesHtml = '<div class="changes-header"><strong>📝 Cambios Realizados:</strong></div>';
+      Object.entries(manualOverrides).forEach(([key, value]) => {
+        const [unitId, field] = key.split('.');
+        const serviceLabel = serviceLabels[field] || field;
+        changesHtml += `
+          <div class="manual-change-item ${manualModeActive ? 'active' : ''}">
+            <span class="manual-change-text">
+              <strong>${unitId}</strong> - ${serviceLabel}: <strong>$${formatCurrency(value)}</strong>
+            </span>
+          </div>
+        `;
+      });
+      changesList.innerHTML = changesHtml;
+    } else {
+      changesList.innerHTML = '<p class="text-info">Sin cambios manuales realizados.</p>';
+    }
 
     // Eventos
     const unitSelect = getElement('manual-unit-select');

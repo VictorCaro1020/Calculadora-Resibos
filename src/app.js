@@ -636,7 +636,7 @@ class UtilityCalculatorApp {
     UI.renderResults(results, this.data.extras);
 
     // Renderiza modo manual (para editar valores)
-    UI.renderManualMode(results, (unitId, field, value) => {
+    UI.renderManualMode(results, this.data.manualOverrides || {}, this.data.manualModeActive || false, (unitId, field, value) => {
       // Callback para cuando el usuario edita manualmente un valor
       
       if (unitId === '__toggle__' && field === '__manual_mode__') {
