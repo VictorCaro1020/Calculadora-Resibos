@@ -1274,31 +1274,28 @@ body {
 .accordion-header {
   width: 100%;
   padding: var(--space-md) var(--space-lg);
-  background: #fde047;
-  color: #78350f;
-  border: 2px solid #fcd34d;
+  background: transparent;
+  color: #000000;
+  border: 1px solid #000000;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all var(--transition-base);
   font-weight: var(--font-weight-semibold);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-base);
 }
 
 .accordion-header:hover {
-  background: #fbbf24;
-  color: #451a03;
-  transform: translateX(3px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+  background: #f3f4f6;
+  transform: translateX(2px);
 }
 
 .accordion-header.active {
-  background: #f59e0b;
-  color: white;
-  border-color: #d97706;
+  background: var(--color-primary-light);
+  color: var(--color-text);
+  border-color: #000000;
 }
 
 .accordion-icon {
