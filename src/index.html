@@ -526,8 +526,8 @@
     if ('serviceWorker' in navigator) {
       // Esperar a que el DOM esté listo
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js', {
-          scope: '/'
+        navigator.serviceWorker.register('./service-worker.js', {
+          scope: './'
         })
           .then((registration) => {
             console.log('✅ PWA: Service Worker registrado exitosamente');

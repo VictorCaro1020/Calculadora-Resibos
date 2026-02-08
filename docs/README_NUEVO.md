@@ -7,6 +7,7 @@ Una **aplicación web progresiva (PWA)** que distribuye automáticamente y de fo
 ## ⚡ Características
 
 ✅ Calcula distribución automática de:
+
 - 💡 Electricidad (2 recibos independientes)
 - 💧 Agua (por cantidad de personas)
 - 🔥 Gas (por grupos)
@@ -21,7 +22,7 @@ Una **aplicación web progresiva (PWA)** que distribuye automáticamente y de fo
 ✅ **Multiidioma**: Español e Inglés  
 ✅ **Funciona offline** (PWA)  
 ✅ **Responsive**: Mobile, tablet, desktop  
-✅ **Accesible**: WCAG Level AA  
+✅ **Accesible**: WCAG Level AA
 
 ---
 
@@ -35,11 +36,11 @@ Una **aplicación web progresiva (PWA)** que distribuye automáticamente y de fo
 
 ## 📚 Documentación
 
-| Documento | Para | Contenido |
-|-----------|------|----------|
-| **[GUIA_USUARIO.md](GUIA_USUARIO.md)** | 👥 Usuarios | Cómo usar la app (paso a paso) |
-| **[ESTRUCTURA_PROYECTO.md](ESTRUCTURA_PROYECTO.md)** | 👨‍💻 Desarrolladores | Arquitectura y módulos |
-| **[DESARROLLO.md](DESARROLLO.md)** | 👨‍💻 Devs avanzados | Tips, aggegar features, debugging |
+| Documento                                            | Para               | Contenido                         |
+| ---------------------------------------------------- | ------------------ | --------------------------------- |
+| **[GUIA_USUARIO.md](GUIA_USUARIO.md)**               | 👥 Usuarios        | Cómo usar la app (paso a paso)    |
+| **[ESTRUCTURA_PROYECTO.md](ESTRUCTURA_PROYECTO.md)** | 👨‍💻 Desarrolladores | Arquitectura y módulos            |
+| **[DESARROLLO.md](DESARROLLO.md)**                   | 👨‍💻 Devs avanzados  | Tips, aggegar features, debugging |
 
 ---
 
@@ -64,17 +65,22 @@ Calculadora-Resibos/
 ## 🎯 Inicio Rápido (3 pasos)
 
 ### 1. Agregar Unidades
+
 Ve a la sección **"Unidades"** e ingresa cada apartamento:
+
 ```
 Unidad: 201 | Personas: 3 | Arriendo: 500.000 | [+ Agregar]
 Unidad: 202 | Personas: 2 | Arriendo: 400.000 | [+ Agregar]
 ```
 
 ### 2. Ingresar Gastos
+
 En cada sección (Luz, Agua, Gas), copia los datos de tu recibo.
 
 ### 3. Ver Resultados
+
 La app calcula automáticamente. Verás:
+
 - Tabla de distribución
 - Modo manual para editar
 - Detalles de cómo se calculó
@@ -90,7 +96,7 @@ La app calcula automáticamente. Verás:
     ↓         ↓                 ↓
 STORAGE   CALCULATOR           UI
 (Datos)   (Lógica)      (Presentación)
-                        
+
                       i18n
                    (Idiomas)
 ```
@@ -104,12 +110,15 @@ Ver [ESTRUCTURA_PROYECTO.md](ESTRUCTURA_PROYECTO.md) para detalles.
 ## 💡 Nuevas Funcionalidades (v2.0)
 
 ### 🔧 Modo Manual
+
 Edita directamente los valores si algo no coincide con tu recibo.
 
 **Ubicación:** Sección "Modo Manual - Editar Valores"
 
 ### 📊 Detalles de Cálculos
+
 Ve exactamente cómo se distribuyó:
+
 - kWh por unidad en electricidad
 - Precio por persona en agua
 - Valor por cabeza en gas
@@ -117,6 +126,7 @@ Ve exactamente cómo se distribuyó:
 **Ubicación:** Sección "Detalles de Cálculos"
 
 ### ✅ Select de Unidades Arreglado
+
 El selector de unidades ahora se llena correctamente.
 
 ---
@@ -163,6 +173,7 @@ Cambiar idioma con el dropdown en la esquina superior.
 La app se adapta a cualquier tamaño de pantalla.
 
 **Instalar como app nativa:**
+
 1. Abre en tu navegador
 2. Click en el menú (⋮)
 3. "Instalar" o "Agregar a pantalla de inicio"
@@ -196,6 +207,7 @@ Ver [GUIA_USUARIO.md](GUIA_USUARIO.md) para más preguntas.
 ## 🐛 Reportar Problemas
 
 ¿Encontraste un bug?
+
 1. Ve a: https://github.com/VictorCaro1020/Calculadora-Resibos/issues
 2. Click "New Issue"
 3. Describe el problema
@@ -233,11 +245,11 @@ Proyecto de código abierto. Úsalo, modíficalo, comparte.
 
 ## 📈 Histórico de Versiones
 
-| v | Cambios |
-|---|---------|
+| v   | Cambios                                                |
+| --- | ------------------------------------------------------ |
 | 2.0 | + Modo Manual, Detalles de Cálculos, Arreglo de select |
-| 1.5 | + Formato de moneda con puntos y comas |
-| 1.0 | Refactorización a arquitectura modular |
+| 1.5 | + Formato de moneda con puntos y comas                 |
+| 1.0 | Refactorización a arquitectura modular                 |
 
 ---
 
