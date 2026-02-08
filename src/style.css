@@ -22,9 +22,9 @@
 
 :root {
   /* Colores */
-  --color-primary: #2b6cb0;           /* Azul principal */
-  --color-primary-dark: #1e4e7a;      /* Azul oscuro (hover) */
-  --color-primary-light: #e8f2f9;     /* Azul muy claro (fondo) */
+  --color-primary: #1e3a8a;           /* Azul principal - menos brillante */
+  --color-primary-dark: #172554;      /* Azul oscuro (hover) - más apagado */
+  --color-primary-light: #e6eefc;     /* Azul muy claro (fondo) - más neutro */
   
   --color-secondary: #6b7280;         /* Gris para textos secundarios */
   --color-success: #10b981;           /* Verde para acciones positivas */
@@ -758,9 +758,9 @@ body {
     --color-text-muted: #cbd5e1;        /* Texto secundario más claro */
     
     /* Colores primarios - más claros en dark mode */
-    --color-primary: #3b82f6;           /* Azul más brillante */
-    --color-primary-dark: #1e40af;      /* Azul más oscuro que primary */
-    --color-primary-light: #1e293b;     /* Fondo para elementos primarios */
+    --color-primary: #254e6b;           /* Azul menos brillante en dark */
+    --color-primary-dark: #0f1724;      /* Azul oscuro más apagado */
+    --color-primary-light: #111827;     /* Fondo para elementos primarios */
     
     /* Colores secundarios */
     --color-secondary: #94a3b8;         /* Gris más claro */
