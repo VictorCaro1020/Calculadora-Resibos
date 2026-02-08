@@ -635,6 +635,26 @@ document.addEventListener('DOMContentLoaded', () => {
   window.app = app;
 });
 
+// ---------- Utilidades de formato ----------
+/**
+ * Formatea un número como moneda con separador de miles
+ * Ejemplo: 1000000.5 → "1.000.000,5"
+ * Solo muestra decimales si son necesarios
+ */
+function formatMoney(value) {
+  const n = Number(value || 0);
+  const fixed = n.toFixed(2);
+  const [intPart, decPart] = fixed.split('.');
+  // Agregar puntos como separador de miles
+  const intWithDots = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  // Remover ceros al final
+  const decTrimmed = decPart.replace(/0+$/, '');
+  // Si no hay decimales, devolver sin coma
+  if (decTrimmed === '') return intWithDots;
+  // Si hay decimales, usar coma
+  return `${intWithDots},${decTrimmed}`;
+}
+
 // ---------- DOM helpers ----------
 function renderUnits(){
   const container = $i('units-list');
