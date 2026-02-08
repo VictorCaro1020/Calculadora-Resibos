@@ -625,8 +625,17 @@ class UtilityCalculatorApp {
     // Calcula y renderiza resultados
     let { results } = Calculator.calculateAllocations(this.data);
 
+    // DEBUG: Validar que results se calculó correctamente
+    const unitCount = Object.keys(results).length;
+    console.log(`🔍 CÁLCULO DE GASTOS: ${unitCount} unidades encontradas`, { results, data: this.data });
+    
+    if (unitCount === 0) {
+      console.warn('⚠️ ADVERTENCIA: No hay unidades para calcular. Verifica que this.data.units no esté vacío.');
+    }
+
     // Aplica overrides manuales si el modo manual está activado
     if (this.data.manualModeActive && this.data.manualOverrides) {
+      console.log('🔧 Aplicando overrides manuales:', this.data.manualOverrides);
       Object.entries(this.data.manualOverrides).forEach(([key, value]) => {
         const [unitId, field] = key.split('.');
         if (results[unitId]) {
@@ -663,7 +672,11 @@ class UtilityCalculatorApp {
       this.refresh();
     });
 
-    // Renderiza detalles de cálculos
+    // Renderiza detalles de cálculos con validación
+    console.log(`📊 Renderizando detalles de cálculos con ${Object.keys(results).length} unidades...`);
+    if (Object.keys(results).length === 0) {
+      console.warn('⚠️ ADVERTENCIA: Sin unidades para mostrar detalles. Revisa que haya datos iniciales.');
+    }
     UI.renderCalculationDetails(this.data, results);
 
     // Renderiza resumen

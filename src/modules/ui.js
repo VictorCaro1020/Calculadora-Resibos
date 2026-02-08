@@ -833,11 +833,23 @@ const UI = (() => {
    */
   const renderCalculationDetails = (data, results) => {
     const container = getElement('calculation-details-container');
-    if (!container) return;
+    if (!container) {
+      console.error('❌ ERROR: No se encontró #calculation-details-container en el DOM');
+      return;
+    }
 
     const units = data.units || [];
+    console.log(`🔍 renderCalculationDetails: ${units.length} unidades, ${Object.keys(results).length} resultados`);
+    
     if (units.length === 0) {
-      container.innerHTML = '<p class="text-info">No hay unidades para mostrar detalles.</p>';
+      container.innerHTML = '<p class="text-info">❌ No hay unidades para mostrar detalles. Agrega al menos una unidad primero.</p>';
+      console.warn('⚠️ Sin unidades: renderCalculationDetails abortado');
+      return;
+    }
+    
+    if (Object.keys(results).length === 0) {
+      container.innerHTML = '<p class="text-info">❌ Sin datos de resultados. Verifica los cálculos o ingresa valores en los recibos.</p>';
+      console.warn('⚠️ Results vacío: renderCalculationDetails abortado');
       return;
     }
 
@@ -1029,21 +1041,25 @@ const UI = (() => {
     html += `</div>`;
     container.innerHTML = html;
 
-    // Agregar funcionalidad de acordeón
-    container.querySelectorAll('.accordion-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const toggleId = header.getAttribute('data-toggle');
-        const content = getElement(toggleId);
-        const icon = header.querySelector('.accordion-icon');
-        
-        if (content) {
-          const isOpen = content.style.display !== 'none';
-          content.style.display = isOpen ? 'none' : 'block';
-          icon.textContent = isOpen ? '▶' : '▼';
-          header.classList.toggle('active', !isOpen);
-        }
+    // Attach per-accordion listeners as fallback for click handling
+    // (App level delegation also manages these, but per-item listeners ensure functionality)
+    setTimeout(() => {
+      container.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', function(e) {
+          e.stopPropagation(); // Prevent double-triggering with document delegation
+          const toggleId = header.getAttribute('data-toggle');
+          const content = getElement(toggleId);
+          const icon = header.querySelector('.accordion-icon');
+          
+          if (content && icon) {
+            const isOpen = content.style.display !== 'none';
+            content.style.display = isOpen ? 'none' : 'block';
+            icon.textContent = isOpen ? '▶' : '▼';
+            header.classList.toggle('active', !isOpen);
+          }
+        });
       });
-    });
+    }, 0);
   };
 
   return {
