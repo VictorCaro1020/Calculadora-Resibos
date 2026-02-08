@@ -677,20 +677,38 @@ document.addEventListener('DOMContentLoaded', () => {
   // Expone app globalmente para debugging (opcional)
   window.app = app;
 
-  // Agregar funcionalidad de colapsables para Modo Manual y Detalles
-  document.querySelectorAll('.collapse-header').forEach(header => {
-    header.addEventListener('click', () => {
+  // Event delegation para botones colapsables (funciona incluso con contenido dinámico)
+  document.addEventListener('click', (e) => {
+    const header = e.target.closest('.collapse-header');
+    if (header) {
       const toggleId = header.getAttribute('data-toggle');
       const content = document.getElementById(toggleId);
       const icon = header.querySelector('.collapse-icon');
       
-      if (content) {
+      if (content && icon) {
         const isOpen = content.style.display !== 'none';
         content.style.display = isOpen ? 'none' : 'block';
         icon.textContent = isOpen ? '▶' : '▼';
         header.classList.toggle('active', !isOpen);
       }
-    });
+    }
+  });
+
+  // Event delegation para botones de acordeón dentro de detalles de cálculos
+  document.addEventListener('click', (e) => {
+    const accordionHeader = e.target.closest('.accordion-header');
+    if (accordionHeader) {
+      const toggleId = accordionHeader.getAttribute('data-toggle');
+      const content = document.getElementById(toggleId);
+      const icon = accordionHeader.querySelector('.accordion-icon');
+      
+      if (content && icon) {
+        const isOpen = content.style.display !== 'none';
+        content.style.display = isOpen ? 'none' : 'block';
+        icon.textContent = isOpen ? '▶' : '▼';
+        accordionHeader.classList.toggle('active', !isOpen);
+      }
+    }
   });
 });
 
