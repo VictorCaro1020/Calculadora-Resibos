@@ -667,12 +667,177 @@ const UI = (() => {
     });
   };
 
+  /**
+   * Llena el select de unidades para el resumen
+   * @param {array} units - Lista de unidades disponibles
+   */
+  const populateUnitSelector = (units) => {
+    const select = getElement('unit-summary-select');
+    if (!select) return;
+
+    // Limpiar opciones previas
+    select.innerHTML = '<option value="">-- Selecciona una unidad --</option>';
+
+    // Agregar cada unidad como opción
+    units.forEach(unit => {
+      const option = document.createElement('option');
+      option.value = unit.id;
+      option.textContent = unit.id;
+      select.appendChild(option);
+    });
+
+    // Preseleccionar la primera unidad si existe
+    if (units.length > 0) {
+      select.value = units[0].id;
+    }
+  };
+
+  /**
+   * Renderiza la sección de Modo Manual para editar valores
+   * @param {object} results - Resultados actuales {unitId: {rent, electricity, ...}}
+   * @param {function} onUpdate - Callback cuando se actualiza un valor
+   */
+  const renderManualMode = (results, onUpdate) => {
+    const container = getElement('manual-mode-container');
+    if (!container) return;
+
+    const unitIds = Object.keys(results);
+    if (unitIds.length === 0) {
+      container.innerHTML = '<p class="text-info">No hay unidades para editar.</p>';
+      return;
+    }
+
+    let html = '<div class="manual-mode-grid">';
+
+    unitIds.forEach(unitId => {
+      const result = results[unitId];
+      html += `
+        <div class="manual-card">
+          <h4>${unitId}</h4>
+          <div class="manual-inputs">
+            <div class="form-group">
+              <label>Arriendo:</label>
+              <input type="number" min="0" step="0.01" value="${result.rent}" 
+                     data-unit="${unitId}" data-field="rent" class="manual-input" />
+            </div>
+            <div class="form-group">
+              <label>Electricidad:</label>
+              <input type="number" min="0" step="0.01" value="${result.electricity}" 
+                     data-unit="${unitId}" data-field="electricity" class="manual-input" />
+            </div>
+            <div class="form-group">
+              <label>Agua:</label>
+              <input type="number" min="0" step="0.01" value="${result.water}" 
+                     data-unit="${unitId}" data-field="water" class="manual-input" />
+            </div>
+            <div class="form-group">
+              <label>Gas:</label>
+              <input type="number" min="0" step="0.01" value="${result.gas}" 
+                     data-unit="${unitId}" data-field="gas" class="manual-input" />
+            </div>
+            <div class="form-group">
+              <label>Aseo:</label>
+              <input type="number" min="0" step="0.01" value="${result.cleaning}" 
+                     data-unit="${unitId}" data-field="cleaning" class="manual-input" />
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Agregar listeners a los inputs
+    container.querySelectorAll('.manual-input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const unitId = e.target.dataset.unit;
+        const field = e.target.dataset.field;
+        const value = Number(e.target.value) || 0;
+        if (onUpdate) {
+          onUpdate(unitId, field, value);
+        }
+      });
+    });
+  };
+
+  /**
+   * Renderiza los detalles/breakdown de cálculos
+   * @param {object} data - Datos de entrada (units, electricity, water, etc)
+   * @param {object} results - Resultados calculados
+   */
+  const renderCalculationDetails = (data, results) => {
+    const container = getElement('calculation-details-container');
+    if (!container) return;
+
+    let html = '<div class="details-grid">';
+
+    // ===== DETALLES DE ELECTRICIDAD =====
+    if (data.electricityA && data.electricityA.totalPrice > 0) {
+      html += `
+        <div class="detail-card">
+          <h4>📊 Electricidad A (201-202)</h4>
+          <table class="detail-table">
+            <tr><td>Total kWh:</td><td><strong>${data.electricityA.totalKwh || 0}</strong></td></tr>
+            <tr><td>Precio total:</td><td><strong>$${formatCurrency(data.electricityA.totalPrice)}</strong></td></tr>
+            <tr><td>Precio/kWh:</td><td><strong>$${formatCurrency((data.electricityA.totalPrice / (data.electricityA.totalKwh || 1)))}</strong></td></tr>
+            <tr class="detail-separator"><td colspan="2">Consumo por unidad:</td></tr>
+            <tr><td>+ Medidor 202:</td><td>${(data.electricityA.unit202?.currentReading || 0) - (data.electricityA.unit202?.previousReading || 0)} kWh</td></tr>
+            <tr><td>+ Medidor 201:</td><td>${Math.max(0, (data.electricityA.totalKwh || 0) - ((data.electricityA.unit202?.currentReading || 0) - (data.electricityA.unit202?.previousReading || 0)))} kWh</td></tr>
+          </table>
+        </div>
+      `;
+    }
+
+    // ===== DETALLES DE AGUA =====
+    if (data.water && data.water.totalPrice > 0) {
+      const totalPeople = (data.units || []).reduce((sum, u) => sum + (Number(u.people) || 0), 0);
+      const pricePerHead = totalPeople > 0 ? data.water.totalPrice / totalPeople : 0;
+      html += `
+        <div class="detail-card">
+          <h4>💧 Agua</h4>
+          <table class="detail-table">
+            <tr><td>Total factura:</td><td><strong>$${formatCurrency(data.water.totalPrice)}</strong></td></tr>
+            <tr><td>Total personas:</td><td><strong>${totalPeople}</strong></td></tr>
+            <tr><td>Precio por persona:</td><td><strong>$${formatCurrency(pricePerHead)}</strong></td></tr>
+          </table>
+        </div>
+      `;
+    }
+
+    // ===== DETALLES DE GAS =====
+    if ((data.gas?.group1 > 0) || (data.gas?.group2 > 0)) {
+      const group1People = ((data.units || []).filter(u => ['201', '202'].some(id => u.id.includes(id)))).reduce((sum, u) => sum + (Number(u.people) || 0), 0);
+      const group2People = ((data.units || []).filter(u => ['401', '402'].some(id => u.id.includes(id)))).reduce((sum, u) => sum + (Number(u.people) || 0), 0);
+      
+      html += `
+        <div class="detail-card">
+          <h4>🔥 Gas</h4>
+          <table class="detail-table">
+            <tr><td>Grupo 1 (201+202):</td><td><strong>$${formatCurrency(data.gas?.group1 || 0)}</strong></td></tr>
+            <tr><td>  → Personas:</td><td>${group1People}</td></tr>
+            <tr><td>  → Por persona:</td><td>$${formatCurrency(group1People > 0 ? (data.gas?.group1 || 0) / group1People : 0)}</td></tr>
+            <tr class="detail-separator"><td colspan="2"></td></tr>
+            <tr><td>Grupo 2 (401+402):</td><td><strong>$${formatCurrency(data.gas?.group2 || 0)}</strong></td></tr>
+            <tr><td>  → Personas:</td><td>${group2People}</td></tr>
+            <tr><td>  → Por persona:</td><td>$${formatCurrency(group2People > 0 ? (data.gas?.group2 || 0) / group2People : 0)}</td></tr>
+          </table>
+        </div>
+      `;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+  };
+
   return {
     // Rendering
     renderUnits,
     renderExtras,
     renderResults,
     renderUnitSummary,
+    renderManualMode,
+    renderCalculationDetails,
     initializeInputsFromData,
 
     // Events
@@ -687,7 +852,8 @@ const UI = (() => {
     // Utilities
     showMessage,
     formatCurrency,
-    setInputsEnabled
+    setInputsEnabled,
+    populateUnitSelector
   };
 })();
 

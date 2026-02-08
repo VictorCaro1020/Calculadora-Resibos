@@ -612,6 +612,9 @@ class UtilityCalculatorApp {
       onRemove: (idx) => this.deleteUnit(idx)
     });
 
+    // Llena el select de unidades para el resumen
+    UI.populateUnitSelector(this.data.units);
+
     // Renderiza lista de extras
     UI.renderExtras(this.data.extras, this.data.units, {
       onRemove: (idx) => this.deleteExtra(idx)
@@ -620,6 +623,15 @@ class UtilityCalculatorApp {
     // Calcula y renderiza resultados
     const { results } = Calculator.calculateAllocations(this.data);
     UI.renderResults(results, this.data.extras);
+
+    // Renderiza modo manual (para editar valores)
+    UI.renderManualMode(results, (unitId, field, value) => {
+      // Callback para cuando el usuario edita manualmente un valor
+      console.log(`Modo Manual: ${unitId}.${field} = ${value}`);
+    });
+
+    // Renderiza detalles de cálculos
+    UI.renderCalculationDetails(this.data, results);
 
     // Renderiza resumen
     this.renderSummary();
