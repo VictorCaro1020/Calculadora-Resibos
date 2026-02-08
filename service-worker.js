@@ -17,15 +17,15 @@
 
 const CACHE_NAME = 'recibos-pwa-v1';
 const CACHE_ASSETS = [
-  '/',                           // Página principal
-  '/index.html',                 // HTML
-  '/style.css',                  // Estilos
-  '/app.js',                     // Lógica principal
-  '/modules/i18n.js',            // Internacionalización
-  '/modules/storage.js',         // Almacenamiento
-  '/modules/calculator.js',      // Cálculos
-  '/modules/ui.js',              // Interfaz
-  '/manifest.json'               // Metadatos de app
+  '/Calculadora-Resibos/',                           // Página principal
+  '/Calculadora-Resibos/index.html',                 // HTML
+  '/Calculadora-Resibos/style.css',                  // Estilos
+  '/Calculadora-Resibos/app.js',                     // Lógica principal
+  '/Calculadora-Resibos/modules/i18n.js',            // Internacionalización
+  '/Calculadora-Resibos/modules/storage.js',         // Almacenamiento
+  '/Calculadora-Resibos/modules/calculator.js',      // Cálculos
+  '/Calculadora-Resibos/modules/ui.js',              // Interfaz
+  '/Calculadora-Resibos/manifest.json'               // Metadatos de app
 ];
 
 /**
