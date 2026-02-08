@@ -77,6 +77,7 @@ class UtilityCalculatorApp {
 
     // Event listener para cambiar tema (Light/Dark)
     const themeToggle = document.getElementById('theme-toggle');
+    console.log('Theme toggle element:', themeToggle);
     if (themeToggle) {
       // Restaurar tema guardado al cargar
       const savedTheme = localStorage.getItem('appTheme');
@@ -87,6 +88,7 @@ class UtilityCalculatorApp {
 
       themeToggle.addEventListener('click', (e) => {
         e.preventDefault();
+        console.log('Theme toggle clicked!');
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         
@@ -97,6 +99,8 @@ class UtilityCalculatorApp {
         themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
         console.log(`Tema cambiado a: ${newTheme}`);
       });
+    } else {
+      console.warn('Theme toggle element not found!');
     }
   }
 

@@ -210,6 +210,13 @@ body {
   gap: var(--space-md);
   align-items: center;
 }
+
+.language-selector:hover,
+.language-selector:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
 .language-selector:focus {
   background: rgba(255, 255, 255, 0.3);
 }
