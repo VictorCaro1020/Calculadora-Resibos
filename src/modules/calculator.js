@@ -377,7 +377,18 @@ const Calculator = (() => {
    * @returns {object} Breakdown de gastos para esa unidad
    */
   const calculateUnitSummary = (data, unitId, includes = {}) => {
-    const { results } = calculateAllocations(data);
+    let { results } = calculateAllocations(data);
+    
+    // Aplica overrides manuales si el modo manual está activado
+    if (data.manualModeActive && data.manualOverrides) {
+      Object.entries(data.manualOverrides).forEach(([key, value]) => {
+        const [unit, field] = key.split('.');
+        if (results[unit]) {
+          results[unit][field] = value;
+        }
+      });
+    }
+    
     const unitResult = results[unitId];
     
     if (!unitResult) return null;

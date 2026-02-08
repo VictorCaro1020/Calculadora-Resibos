@@ -969,6 +969,24 @@ const UI = (() => {
     // Detalles por unidad
     units.forEach((unit, idx) => {
       const result = results[unit.id] || {};
+      
+      // Calcular kWh consumido por esta unidad
+      let kwhInfo = '';
+      const consumption202 = Math.max(0, (data.electricityA?.unit202?.currentReading || 0) - (data.electricityA?.unit202?.previousReading || 0));
+      const totalKwhA = data.electricityA?.totalKwh || 0;
+      const consumption201 = Math.max(0, totalKwhA - consumption202);
+      
+      const consumption401 = Math.max(0, (data.electricityB?.unit401?.currentReading || 0) - (data.electricityB?.unit401?.previousReading || 0));
+      const consumption500 = Math.max(0, (data.electricityB?.unit500?.currentReading || 0) - (data.electricityB?.unit500?.previousReading || 0));
+      const totalKwhB = data.electricityB?.totalKwh || 0;
+      const consumption402 = Math.max(0, totalKwhB - consumption401 - consumption500);
+      
+      if (unit.id.includes('202')) kwhInfo = `<div class="kwh-info">⚡ ${consumption202} kWh (Electricidad A)</div>`;
+      else if (unit.id.includes('201')) kwhInfo = `<div class="kwh-info">⚡ ${consumption201} kWh (Electricidad A)</div>`;
+      else if (unit.id.includes('401')) kwhInfo = `<div class="kwh-info">⚡ ${consumption401} kWh (Electricidad B)</div>`;
+      else if (unit.id.includes('402')) kwhInfo = `<div class="kwh-info">⚡ ${consumption402} kWh (Electricidad B)</div>`;
+      else if (unit.id.includes('500')) kwhInfo = `<div class="kwh-info">⚡ ${consumption500} kWh (Electricidad B)</div>`;
+      
       html += `
         <div class="accordion-item">
           <button class="accordion-header" data-toggle="unit-${idx}">
@@ -977,6 +995,7 @@ const UI = (() => {
           </button>
           <div id="unit-${idx}" class="accordion-content" style="display: none;">
             <div class="unit-details">
+              ${kwhInfo}
               <div class="detail-row">
                 <span>Arriendo:</span>
                 <strong>$${formatCurrency(result.rent || 0)}</strong>

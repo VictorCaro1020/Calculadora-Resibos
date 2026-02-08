@@ -676,6 +676,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Expone app globalmente para debugging (opcional)
   window.app = app;
+
+  // Agregar funcionalidad de colapsables para Modo Manual y Detalles
+  document.querySelectorAll('.collapse-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const toggleId = header.getAttribute('data-toggle');
+      const content = document.getElementById(toggleId);
+      const icon = header.querySelector('.collapse-icon');
+      
+      if (content) {
+        const isOpen = content.style.display !== 'none';
+        content.style.display = isOpen ? 'none' : 'block';
+        icon.textContent = isOpen ? '▶' : '▼';
+        header.classList.toggle('active', !isOpen);
+      }
+    });
+  });
 });
 
 // ---------- Utilidades de formato ----------
