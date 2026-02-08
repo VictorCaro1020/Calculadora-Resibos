@@ -106,10 +106,12 @@ body {
   padding: var(--space-md);
   text-decoration: none;
   z-index: 100;
+  display: none; /* Ocultar la barra de contenido principal */
 }
 
 .skip-link:focus {
-  top: 0;
+  top: -40px; /* Mantenerlo oculto incluso en focus */
+  display: none;
 }
 
 .sr-only {
@@ -137,16 +139,20 @@ body {
   margin-bottom: var(--space-xl);
 }
 
-  .toggle-status.active {
-    background: #fca5a5;
-    color: #000000;
-    display: none;
-  }
-  .toggle-status.inactive {
-    background: #67e8f9;
-    color: #000000;
-    border-radius: var(--radius-md);
-  }
+.toggle-status.active {
+  background: #dc2626;
+  color: #ffffff;
+  display: none;
+}
+.toggle-status.inactive {
+  background: #059669;
+  color: #ffffff;
+  border-radius: var(--radius-md);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: var(--space-xl);
 }
@@ -961,17 +967,18 @@ body {
   border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
+  display: inline-block;
 }
 
 .toggle-status.active {
-  background-color: #ff4444;
-  color: white;
+  background-color: #dc2626; /* Rojo más saturado y oscuro */
+  color: #ffffff; /* Texto blanco puro */
   display: none;
 }
 
 .toggle-status.inactive {
-  background-color: #44aa44;
-  color: white;
+  background-color: #059669; /* Verde más saturado y oscuro */
+  color: #ffffff; /* Texto blanco puro */
 }
 
 .manual-mode-active .toggle-status.active {
@@ -1364,21 +1371,20 @@ body {
 
 .toggle-status {
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
 }
 
 .toggle-status.active {
-  background: #fca5a5;
-  color: #7f1d1d;
-    border-radius: var(--radius-md);
+  background: #dc2626;
+  color: #ffffff;
   display: none;
 }
 
 .toggle-status.inactive {
-  background: #67e8f9;
-  color: #164e63;
+  background: #059669;
+  color: #ffffff;
   border-radius: var(--radius-md);
 }
 
