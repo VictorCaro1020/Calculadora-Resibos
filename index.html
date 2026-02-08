@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Recibos</title>
-    <link rel="manifest" href="./src/manifest.json">
+    <link rel="manifest" href="/Calculadora-Resibos/src/manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232b6cb0' width='192' height='192'/><text x='50%' y='50%' font-size='120' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>$</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232b6cb0' width='192' height='192'/><text x='50%' y='50%' font-size='120' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>$</text></svg>">
     <meta name="theme-color" content="#2b6cb0">
-    <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" href="/Calculadora-Resibos/src/style.css">
     <meta name="description" content="Calculadora inteligente para distribuir equitativamente gastos de servicios domésticos entre múltiples unidades">
 </head>
 <body>
     <div id="app"></div>
     
     <!-- Modular app loaded from src/ -->
-    <script src="./src/modules/i18n.js"></script>
-    <script src="./src/modules/storage.js"></script>
-    <script src="./src/modules/calculator.js"></script>
-    <script src="./src/modules/ui.js"></script>
-    <script src="./src/app.js"></script>
+    <script src="/Calculadora-Resibos/src/modules/i18n.js"></script>
+    <script src="/Calculadora-Resibos/src/modules/storage.js"></script>
+    <script src="/Calculadora-Resibos/src/modules/calculator.js"></script>
+    <script src="/Calculadora-Resibos/src/modules/ui.js"></script>
+    <script src="/Calculadora-Resibos/src/app.js"></script>
     
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./src/service-worker.js', { scope: '/Calculadora-Resibos/' })
+            navigator.serviceWorker.register('/Calculadora-Resibos/src/service-worker.js', { scope: '/Calculadora-Resibos/' })
                 .then(() => console.log('✓ Service Worker registrado'))
                 .catch(err => console.warn('✗ Error registrando Service Worker:', err));
         }
