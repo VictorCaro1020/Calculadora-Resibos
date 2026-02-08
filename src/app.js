@@ -29,6 +29,9 @@ class UtilityCalculatorApp {
     this.isInitialized = false;
   }
 
+// Helper global rápido para obtener elementos por id (sintaxis corta usada en el archivo)
+const $i = (id) => document.getElementById(id);
+
   /**
    * Inicializa la aplicación completamente
    * Se llama una sola vez al cargar la página
