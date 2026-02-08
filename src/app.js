@@ -22,15 +22,15 @@
  * - Mantener el código limpio y escalable
  */
 
+// Helper global rápido para obtener elementos por id (sintaxis corta usada en el archivo)
+const $i = (id) => document.getElementById(id);
+
 class UtilityCalculatorApp {
   constructor() {
     // Carga datos guardados o usa esquema por defecto
     this.data = Storage.load() || Storage.getDefault();
     this.isInitialized = false;
   }
-
-// Helper global rápido para obtener elementos por id (sintaxis corta usada en el archivo)
-const $i = (id) => document.getElementById(id);
 
   /**
    * Inicializa la aplicación completamente
